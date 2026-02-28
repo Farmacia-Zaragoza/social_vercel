@@ -1,3 +1,3 @@
 export default function Page() {
-  return <h1>Conexión Vercel Pro + Contentful: OK</h1>;
+  return <h1>Vercel Pro + Contentful: Conexión Limpia</h1>;
 }
