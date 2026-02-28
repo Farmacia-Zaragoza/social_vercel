@@ -4,25 +4,34 @@ export default async function Page() {
   const client = createClient({
     space: process.env.CONTENTFUL_SPACE_ID,
     accessToken: process.env.CONTENTFUL_ACCESS_TOKEN,
-    host: 'preview.contentful.com' // Crucial: esto le dice que busque borradores
+    host: 'preview.contentful.com' // Para que veas tus borradores en tiempo real
   });
 
-  // IMPORTANTE: Sustituye 'ID_DE_TU_MODELO' por el ID real de tu Content Type
-  const response = await client.getEntries({ content_type: 'ID_DE_TU_MODELO' });
-  const item = response.items[0]; 
+  // Esta consulta trae las últimas 10 entradas de CUALQUIER tipo
+  const response = await client.getEntries({
+    limit: 10,
+    order: '-sys.createdAt' // Los más recientes primero
+  });
 
   return (
-    <div style={{ padding: '40px', fontFamily: 'sans-serif' }}>
-      <h1>Borradores de Contentful (Entorno Preview)</h1>
-      {item ? (
-        <div>
-          <h2>Título: {item.fields.title || 'Sin título'}</h2>
-          <pre style={{ background: '#eee', padding: '15px' }}>
-            {JSON.stringify(item.fields, null, 2)}
-          </pre>
-        </div>
+    <div style={{ padding: '40px', fontFamily: 'system-ui', lineHeight: '1.6' }}>
+      <h1 style={{ color: '#0070f3' }}>Explorador de Contenido (Entorno Preview)</h1>
+      <p>Mostrando los últimos 10 elementos de tu Contentful:</p>
+      <hr />
+      
+      {response.items.length > 0 ? (
+        response.items.map((item) => (
+          <details key={item.sys.id} style={{ marginBottom: '20px', border: '1px solid #eaeaea', borderRadius: '8px', padding: '10px' }}>
+            <summary style={{ fontWeight: 'bold', cursor: 'pointer' }}>
+              📦 Tipo: {item.sys.contentType.sys.id} — ID: {item.sys.id}
+            </summary>
+            <div style={{ marginTop: '10px', background: '#fafafa', padding: '10px' }}>
+              <pre>{JSON.stringify(item.fields, null, 2)}</pre>
+            </div>
+          </details>
+        ))
       ) : (
-        <p>No se encontraron entradas para el modelo especificado.</p>
+        <p>No se encontraron datos. Revisa tus variables de entorno en Vercel.</p>
       )}
     </div>
   );
