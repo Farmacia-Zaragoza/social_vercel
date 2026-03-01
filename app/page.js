@@ -12,6 +12,7 @@ export default async function Page() {
   });
 
   const response = await client.getEntries({
+    content_type: 'article',
     limit: 10,
     order: '-sys.createdAt'
   });
