@@ -1,6 +1,8 @@
 import { createClient } from 'contentful';
 
 export default async function Page() {
+  const isPreview = process.env.VERCEL_ENV !== 'production';
+
   const client = createClient({
     space: process.env.CONTENTFUL_SPACE_ID,
   // Elige el Token segun el entorno de Vercel
