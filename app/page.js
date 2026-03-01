@@ -3,8 +3,12 @@ import { createClient } from 'contentful';
 export default async function Page() {
   const client = createClient({
     space: process.env.CONTENTFUL_SPACE_ID,
-    accessToken: process.env.CONTENTFUL_ACCESS_TOKEN,
-    host: 'preview.contentful.com' // Para que veas tus borradores en tiempo real
+  // Elige el Token segun el entorno de Vercel
+    accessToken: isPreview 
+    ? process.env.CONTENTFUL_PREVIEW_ACCESS_TOKEN 
+    : process.env.CONTENTFUL_ACCESS_TOKEN,
+  // Elige el Host según el entorno de Vercel
+  host: isPreview ? 'preview.contentful.com' : 'cdn.contentful.com'    
   });
 
   // Esta consulta trae las últimas 10 entradas de CUALQUIER tipo
